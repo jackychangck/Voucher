@@ -31,10 +31,7 @@ Route::post('generateVoucherCode', [RedeemController::class, 'generateVoucherCod
 
 Route::get('voucher', [VoucherController::class, 'index']);
 
-Route::get('login', [AuthController::class, 'login']);
 Route::post('login', [AuthController::class, 'loginPost']);
-Route::get('register', [AuthController::class, 'register']);
 Route::post('register', [AuthController::class, 'registerPost']);
-Route::get('logout', [AuthController::class, 'logout']);
 Route::get('profile', [AuthController::class, 'profile']);
 Route::post('profile', [AuthController::class, 'profilePost']);

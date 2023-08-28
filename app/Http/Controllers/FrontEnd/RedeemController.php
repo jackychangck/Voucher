@@ -76,7 +76,8 @@ class RedeemController extends Controller
         ]);
         
         $photo_name = $request->file('image')->getClientOriginalName();
-        $photo_path = $request->file('image')->store('public/frontend/images');        
+        $request->image->move(public_path('frontend\\images\\'), $photo_name);
+        $photo_path = public_path('frontend\\images\\').$photo_name;        
         $tesseractOcr = new TesseractOCR();
         $tesseractOcr->image(public_path('frontend\\images\\').$photo_name);
         $text = $tesseractOcr->run();

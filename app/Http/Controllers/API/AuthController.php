@@ -11,10 +11,28 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Carbon\Carbon;
+use Tymon\JWTAuth\Exceptions;
+//use Illuminate\Support\Facades\JWTAuth;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
+    // public function __constructor(){
+    //     $this->middleware('auth:api', [
+    //         'except' => [
+    //             'login',
+    //             'register'
+    //         ]
+    //         ]);
+    // }
+
     public function loginPost(Request $request){
+        // try{
+        //     $user = auth()->userOrFail();
+        // }
+        // catch(\Tymon\JWTAuth\Exceptions\UserNotDefinedException $e){
+        //     return response()->json(['error'=> $e]);
+        // }
         $validator = Validator::make($request->all(), [
             'username' => 'required',
             'password' => 'required',
@@ -27,10 +45,13 @@ class AuthController extends Controller
         }
         else{
             $credentials = $request->only('username', 'password');
-            if(Auth::attempt($credentials)){
+            //$token = Auth::attempt($credentials);
+            $token = JWTAuth::attempt($credentials);
+            if($token){
                 return response()->json([
                     'status'=>200,
                     'message'=>"Login Succesfully",
+                    'token'=> $token,
                 ],200);            }
             else{
                 return response()->json([
@@ -59,6 +80,7 @@ class AuthController extends Controller
             $data['email'] = $request->email;
             $data['password'] = Hash::make($request->password);
             $user = User::create($data);
+            $token = JWTAuth::fromUser($user);
 
             if($user){
                 return response()->json([
